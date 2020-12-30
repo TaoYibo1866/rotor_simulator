@@ -34,18 +34,22 @@
       <pose>6.0 5.5 0 0 0 0</pose>
     </include>
     <include>
+      <name>grass_0</name>
       <uri>model://grass_plane</uri>
       <pose>10 10 0 0 0 0</pose>
     </include>
     <include>
+      <name>grass_1</name>
       <uri>model://grass_plane</uri>
       <pose>10 -10 0 0 0 0</pose>
     </include>
     <include>
+      <name>grass_2</name>
       <uri>model://grass_plane</uri>
       <pose>-10 -10 0 0 0 0</pose>
     </include>
     <include>
+      <name>grass_3</name>
       <uri>model://grass_plane</uri>
       <pose>-10 10 0 0 0 0</pose>
     </include>
