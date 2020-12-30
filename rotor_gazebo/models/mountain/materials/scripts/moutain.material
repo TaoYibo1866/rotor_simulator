@@ -1,0 +1,16 @@
+material mountain
+{
+  receive_shadows on
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture mountain.jpg
+        filtering anistropic
+        max_anisotropy 16
+      }
+    }
+  }
+}

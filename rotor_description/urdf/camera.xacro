@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find drone_description)/urdf/common.xacro" />
+
+  <xacro:macro name="camera_macro"
+    params="namespace parent_link robot_namespace camera_name image_topic_name camera_info_topic_name
+      frame_rate horizontal_fov image_width image_height image_format min_distance
+      max_distance noise_mean noise_stddev enable_visual k1 k2 k3 p1 p2 cx cy *origin *visual *material">
+    <joint name="${namespace}/${camera_name}_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent_link}" />
+      <child link="${namespace}/${camera_name}_link" />
+    </joint>
+    <link name="${namespace}/${camera_name}_link">
+      <xacro:insert_block name="visual" />
+    </link>
+    <gazebo reference="${namespace}/${camera_name}_link">
+      <xacro:insert_block name="material" />
+      <sensor type="camera" name="camera">
+        <camera name="head">
+          <horizontal_fov>${horizontal_fov}</horizontal_fov>
+          <image>
+            <width>${image_width}</width>
+            <height>${image_height}</height>
+            <format>${image_format}</format>
+          </image>
+          <clip>
+            <near>${min_distance}</near>
+            <far>${max_distance}</far>
+          </clip>
+          <distortion>
+            <k1>${k1}</k1>
+            <k2>${k2}</k2>
+            <k3>${k3}</k3>
+            <p1>${p1}</p1>
+            <p2>${p2}</p2>
+            <center>${cx} ${cy}</center>
+          </distortion>
+          <noise>
+            <type>gaussian</type>
+            <!-- Noise is sampled independently per pixel on each frame.
+                 That pixel's noise value is added to each of its color
+                 channels, which at that point lie in the range [0,1]. -->
+            <mean>${noise_mean}</mean>
+            <stddev>${noise_stddev}</stddev>
+          </noise>
+        </camera>
+        <always_on>true</always_on>
+        <update_rate>${frame_rate}</update_rate>
+        <xacro:if value="${enable_visual}">
+          <visualize>true</visualize>
+        </xacro:if>
+        <plugin name="${namespace}_gazebo_ros_camera" filename="libgazebo_ros_camera.so">
+          <robotNamespace>${robot_namespace}</robotNamespace>
+          <cameraName>${camera_name}</cameraName>
+          <imageTopicName>${image_topic_name}</imageTopicName>
+          <cameraInfoTopicName>${camera_info_topic_name}</cameraInfoTopicName>
+          <frameName>camera_link</frameName>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+</robot>
