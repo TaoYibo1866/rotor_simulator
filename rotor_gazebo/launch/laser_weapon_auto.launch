@@ -25,8 +25,7 @@
     </include>
     <node name="rotor2_driver" pkg="rotor_simulator" type="rotor2_driver_node" output="screen">
     </node>
-    <node name="rotor2_joy" pkg="rotor_simulator" type="rotor2_joy_node">
-    </node>
+    <node name="visual_servo" pkg="rotor_simulator" type="visual_servo_node" output="screen"/>
   </group>
 
   <group ns="dji_m100_0">
@@ -70,13 +69,15 @@
       <param name="x_offset" type="double" value="2"/>
       <param name="omega" type="double" value="-0.6"/>
       <param name="a" type="double" value="3"/>
-      <param name="phase" type="double" value="0"/>
+      <param name="phase" type="double" value="-2.3"/>
     </node>
   </group>
 
-  <node name="joy" pkg="joy" type="joy_node" output="screen"/>
+  <!-- <node name="image_view" pkg="image_view" type="image_view" args="image:=/camera/image_raw">
+    <param name="autosize" type="bool" value="true"/>
+  </node> -->
 
-  <node name="image_view" pkg="image_view" type="image_view" args="image:=/camera/image_raw">
+  <node name="image_view" pkg="image_view" type="image_view" args="image:=/rotor2/image_output">
     <param name="autosize" type="bool" value="true"/>
   </node>
 

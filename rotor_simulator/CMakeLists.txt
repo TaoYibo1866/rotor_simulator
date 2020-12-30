@@ -9,7 +9,11 @@ project(rotor_simulator)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  image_transport
+  cv_bridge
 )
+
+find_package(OpenCV REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -116,6 +120,7 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -134,6 +139,7 @@ include_directories(
 add_executable(rotor2_driver_node src/rotor2_driver_node.cpp)
 add_executable(rotor2_joy_node src/rotor2_joy_node.cpp)
 add_executable(moving_drone_node src/moving_drone_node.cpp)
+add_executable(visual_servo_node src/visual_servo_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -146,6 +152,7 @@ add_executable(moving_drone_node src/moving_drone_node.cpp)
 add_dependencies(rotor2_driver_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(rotor2_joy_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(moving_drone_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(visual_servo_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(rotor2_driver_node
@@ -160,6 +167,10 @@ target_link_libraries(moving_drone_node
   ${catkin_LIBRARIES}
 )
 
+target_link_libraries(visual_servo_node
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
+)
 #############
 ## Install ##
 #############

@@ -24,6 +24,16 @@
       <pose>5 5 0 0 0 0</pose>
     </include>
     <include>
+      <name>tree_1</name>
+      <uri>model://pine_tree</uri>
+      <pose>5.4 4.2 0 0 0 0</pose>
+    </include>
+    <include>
+      <name>tree_2</name>
+      <uri>model://pine_tree</uri>
+      <pose>6.0 5.5 0 0 0 0</pose>
+    </include>
+    <include>
       <uri>model://grass_plane</uri>
       <pose>10 10 0 0 0 0</pose>
     </include>
@@ -40,9 +50,14 @@
       <pose>-10 10 0 0 0 0</pose>
     </include>
     <include>
-      <name>bridge</name>
+      <name>bridge_0</name>
       <uri>model://truss_bridge</uri>
-      <pose>15 0 0 0 0 0</pose>
+      <pose>15 10 0 0 0 0</pose>
+    </include>
+    <include>
+      <name>bridge_1</name>
+      <uri>model://truss_bridge</uri>
+      <pose>15 -10 0 0 0 0</pose>
     </include>
     <model name='mountain'>
       <static>true</static>
