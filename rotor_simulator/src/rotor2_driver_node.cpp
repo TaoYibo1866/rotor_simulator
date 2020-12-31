@@ -38,14 +38,15 @@ SetModelConfiguration set_srv;
 GetJointProperties get_srv0, get_srv1;
 
 double angle_cmd_0 = 0.0, angle_cmd_1 = 0.0;
+double omega_cmd_0 = 0.0, omega_cmd_1 = 0.0;
 LowPassFilter filter_0(5, 50);
 LowPassFilter filter_1(8, 50);
 
 void cmdCallback(const JoyConstPtr &cmd)
 {
   ROS_ASSERT(cmd->axes.size() == 2);
-  angle_cmd_0 = cmd->axes[0];
-  angle_cmd_1 = cmd->axes[1];
+  omega_cmd_0 = cmd->axes[0];
+  omega_cmd_1 = cmd->axes[1];
 }
 
 void timerCallback(const ros::TimerEvent &event)
@@ -58,7 +59,8 @@ void timerCallback(const ros::TimerEvent &event)
     joint_state.axes.push_back(get_srv1.response.position[0]);
     joint_pub.publish(joint_state);
   }
-
+  angle_cmd_0 += omega_cmd_0 * 0.02;
+  angle_cmd_1 += omega_cmd_1 * 0.02;
   set_srv.request.joint_positions[0] = filter_0.proccess(angle_cmd_0);
   set_srv.request.joint_positions[1] = filter_1.proccess(angle_cmd_1);
   set_joint_client.call(set_srv);
@@ -81,7 +83,7 @@ int main(int argc, char **argv)
   set_srv.request.joint_positions.resize(2);
   get_srv0.request.joint_name = joint_names[0];
   get_srv1.request.joint_name = joint_names[1];
-  ros::Subscriber cmd_sub = nh.subscribe<Joy>("rotor2_angle_cmd", 1, cmdCallback);
+  ros::Subscriber cmd_sub = nh.subscribe<Joy>("rotor2_twist_cmd", 1, cmdCallback);
   joint_pub = nh.advertise<Joy>("rotor2_angle", 1);
   ros::Timer timer = nh.createTimer(ros::Duration(0.02), timerCallback, false, false);
   ros::Duration(5).sleep(); // wait for model, otherwise gazebo gui stuck on startup

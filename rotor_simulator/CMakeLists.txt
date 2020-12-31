@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(rotor_simulator)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -123,6 +123,8 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
 )
 
+aux_source_directory(src/KCF KCF_SRCS)
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/rotor_simulator.cpp
@@ -139,7 +141,7 @@ include_directories(
 add_executable(rotor2_driver_node src/rotor2_driver_node.cpp)
 add_executable(rotor2_joy_node src/rotor2_joy_node.cpp)
 add_executable(moving_drone_node src/moving_drone_node.cpp)
-add_executable(visual_servo_node src/visual_servo_node.cpp)
+add_executable(visual_servo_node src/visual_servo_node.cpp ${KCF_SRCS})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
