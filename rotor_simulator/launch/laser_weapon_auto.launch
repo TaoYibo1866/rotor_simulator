@@ -13,8 +13,8 @@
 
   <group ns="rotor2">
     <include file="$(find rotor_gazebo)/launch/spawn_robot.launch">
-      <arg name="robot_name" value="rotor2" />
-      <arg name="model" value="$(find rotor_description)/urdf/rotor2.xacro" />
+      <arg name="model" value="rotor2" />
+      <arg name="namespace" value="rotor2" />
       <arg name="is_kinematic" value="true"/>
       <arg name="x" value="-10"/>
       <arg name="y" value="0"/>
@@ -30,8 +30,8 @@
 
   <group ns="dji_m100_0">
     <include file="$(find drone_gazebo)/launch/spawn_mav.launch">
-      <arg name="mav_name" value="dji_m100_0" />
-      <arg name="model" value="$(find drone_description)/urdf/dji_m100_default.xacro" />
+      <arg name="model" value="dji_m100_default" />
+      <arg name="namespace" value="dji_m100_0" />
       <arg name="is_kinematic" value="true"/>
       <arg name="x" value="0"/>
       <arg name="y" value="0"/>
@@ -40,7 +40,7 @@
       <arg name="P" value="0"/>
       <arg name="Y" value="0"/>
     </include>
-    <node name="hil_bridge" pkg="drone_simulator" type="hil_bridge_node">
+    <node name="hil_interface" pkg="drone_simulator" type="hil_interface_node">
       <param name="model_name" type="string" value="dji_m100_0"/>
     </node>
     <node name="moving_drone" pkg="rotor_simulator" type="moving_drone_node">
@@ -52,8 +52,8 @@
 
   <group ns="dji_m100_1">
     <include file="$(find drone_gazebo)/launch/spawn_mav.launch">
-      <arg name="mav_name" value="dji_m100_1" />
-      <arg name="model" value="$(find drone_description)/urdf/dji_m100_default.xacro" />
+      <arg name="model" value="dji_m100_default" />
+      <arg name="namespace" value="dji_m100_1" />
       <arg name="is_kinematic" value="true"/>
       <arg name="x" value="0"/>
       <arg name="y" value="0"/>
@@ -62,7 +62,7 @@
       <arg name="P" value="0"/>
       <arg name="Y" value="0"/>
     </include>
-    <node name="hil_bridge" pkg="drone_simulator" type="hil_bridge_node">
+    <node name="hil_interface" pkg="drone_simulator" type="hil_interface_node">
       <param name="model_name" type="string" value="dji_m100_1"/>
     </node>
     <node name="moving_drone" pkg="rotor_simulator" type="moving_drone_node">

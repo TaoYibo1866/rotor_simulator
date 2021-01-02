@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 
 <launch>
-  <arg name="robot_name" default="rotor2"/>
-  <arg name="namespace" default="$(arg robot_name)"/>
-  <arg name="model" default="$(find rotor_description)/urdf/$(arg robot_name).xacro"/>
+  <arg name="model" default="rotor2"/>
+  <arg name="namespace" default="rotor2"/>
   <arg name="is_kinematic" default="false"/>
   <arg name="tf_prefix" default="$(optenv ROS_NAMESPACE)"/>
   <arg name="x" default="0.0"/>
@@ -15,7 +14,7 @@
 
   <!-- send the robot XML to param server -->
   <param name="robot_description" command="
-    $(find xacro)/xacro.py '$(arg model)'
+    $(find xacro)/xacro.py '$(find rotor_description)/urdf/$(arg model).xacro'
     namespace:=$(arg namespace)
     is_kinematic:=$(arg is_kinematic)"
   />

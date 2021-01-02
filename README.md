@@ -16,10 +16,10 @@ $ roslaunch rotor_description display.launch
 ![image](https://gitee.com/harbin-institute-of-technology-csc/rotor_simulator/raw/master/rotor2_rviz.png)
 激光武器手柄控制
 ```Bash
-$ roslaunch rotor_gazebo laser_weapon_maunal.launch
+$ roslaunch rotor_simulator laser_weapon_maunal.launch
 ```
 ![image](https://gitee.com/harbin-institute-of-technology-csc/rotor_simulator/raw/master/laser_weapon_manual.png)
 激光武器视觉伺服
 ```Bash
-$ roslaunch rotor_gazebo laser_weapon_auto.launch
+$ roslaunch rotor_simulator laser_weapon_auto.launch
 ```

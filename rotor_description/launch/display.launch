@@ -1,11 +1,11 @@
 <launch>
 
+  <arg name="model" default="rotor2"/>
   <arg name="namespace" default="rotor2"/>
-  <arg name="model" default="$(find rotor_description)/urdf/rotor2.xacro"/>
 
   <!-- send the robot XML to param server -->
   <param name="robot_description" command="
-    $(find xacro)/xacro.py '$(arg model)'
+    $(find xacro)/xacro.py '$(find rotor_description)/urdf/$(arg model).xacro'
     namespace:=$(arg namespace)
     is_kinematic:=true
     "/>

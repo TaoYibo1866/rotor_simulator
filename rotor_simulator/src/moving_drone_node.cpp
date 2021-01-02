@@ -15,7 +15,7 @@ int main(int argc, char **argv)
   ros::param::param<double>("~y_offset", y_offset, 0);
   ros::param::param<double>("~z_offset", z_offset, 2.5);
   ros::NodeHandle nh;
-  ros::Publisher odom_pub = nh.advertise<Odometry>("hil_bridge/odometry", 1);
+  ros::Publisher odom_pub = nh.advertise<Odometry>("hil_odom", 1);
   Odometry odom;
   odom.pose.pose.position.x = x_offset;
   odom.pose.pose.position.y = y_offset;
