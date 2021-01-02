@@ -27,6 +27,9 @@
     </node>
     <node name="rotor2_joy" pkg="rotor_simulator" type="rotor2_joy_node">
     </node>
+    <node name="visual_servo" pkg="rotor_simulator" type="visual_servo_node" output="screen">
+      <remap from="rotor2_twist_cmd" to="/void"/>
+    </node>
   </group>
 
   <group ns="dji_m100_0">
@@ -76,7 +79,11 @@
 
   <node name="joy" pkg="joy" type="joy_node" output="screen"/>
 
-  <node name="image_view" pkg="image_view" type="image_view" args="image:=/camera/image_raw">
+  <!-- <node name="image_view" pkg="image_view" type="image_view" args="image:=/camera/image_raw">
+    <param name="autosize" type="bool" value="true"/>
+  </node> -->
+
+  <node name="image_view" pkg="image_view" type="image_view" args="image:=/rotor2/image_output">
     <param name="autosize" type="bool" value="true"/>
   </node>
 

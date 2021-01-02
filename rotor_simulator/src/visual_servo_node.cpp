@@ -3,6 +3,8 @@
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/Joy.h>
 #include "KCF/kcftracker.hpp"
+#include <iostream>
+#include <fstream>
 
 using sensor_msgs::Joy;
 using std::vector;
@@ -22,8 +24,42 @@ Rect2d roi;
 float peak_value=0;
 vector<double> K{320,240,2117,2117};
 int count=0;
-double g_i_x=0;
-double g_i_y=0;
+double g_i_x = 0;
+double g_i_y = 0;
+
+void viewer(Mat &frame, int status, Rect2d roi, float peak_value)
+{
+  Point up(320,225);
+  Point down(320,255);
+  Point left(305,240);
+  Point right(335,240);
+  line(frame, up, down,Scalar(0, 0, 255),2);
+  line(frame, left, right,Scalar(0, 0, 255),2);
+  if (status == DETECT)
+  {
+    putText(frame, "DETECTING", Point(10,20), FONT_HERSHEY_COMPLEX, 0.8, Scalar(0, 0, 255), 2, 8, 0);
+    putText(frame, "pitch error:",Point(10,40) , FONT_HERSHEY_COMPLEX, 0.8, Scalar(0, 0, 0), 2, 8, 0);
+    putText(frame, "yaw error:",Point(10,60) , FONT_HERSHEY_COMPLEX, 0.8, Scalar(0, 0, 0), 2, 8, 0);
+    putText(frame, "area:",Point(10,80) , FONT_HERSHEY_COMPLEX, 0.8, Scalar(0, 0, 0), 2, 8, 0);
+    putText(frame, "peak_value:",Point(10,100) , FONT_HERSHEY_COMPLEX, 0.8, Scalar(0, 0, 0), 2, 8, 0);
+  }
+  else
+  {
+    Point center = 0.5 * (roi.tl() + roi.br());
+    char s[100];
+    putText(frame, "TRACKING",Point(10,20) , FONT_HERSHEY_COMPLEX, 0.8, Scalar(0, 0, 255), 2, 8, 0);
+    sprintf(s, "pitch error:%d", center.x - 320);
+    putText(frame, s,Point(10,40) , FONT_HERSHEY_COMPLEX, 0.8, Scalar(0, 0, 0), 2, 8, 0);
+    sprintf(s, "yaw error:%d", center.y - 240);
+    putText(frame, s,Point(10,60) , FONT_HERSHEY_COMPLEX, 0.8, Scalar(0, 0, 0), 2, 8, 0);
+    sprintf(s, "area:%d", (int)roi.area());
+    putText(frame, s,Point(10,80) , FONT_HERSHEY_COMPLEX, 0.8, Scalar(0, 0, 0), 2, 8, 0);
+    sprintf(s, "peak_value:%.2f", peak_value);
+    putText(frame, s,Point(10,100) , FONT_HERSHEY_COMPLEX, 0.8, Scalar(0, 0, 0), 2, 8, 0);
+  }
+  return;
+}
+
 double generatePI(double input, double& integral, double t, double Kp=1.0, double Ki=0.0)
 {
   integral += input * t;
@@ -35,8 +71,8 @@ bool cmdGenerate(Rect2d roi,Joy& cmd,vector<double> K)
     Point center = 0.5 * (roi.tl() + roi.br());
     double err_0 = -atan((center.x-K[0])/K[2]);
     double err_1 = atan((center.y-K[1])/K[3]);
-    cmd.axes[0] = generatePI(err_0, g_i_x, 1.0/30, 8, 0.5); // Z axis rotation (rad)
-    cmd.axes[1] = generatePI(err_1, g_i_y, 1.0/30, 8, 0.5); // Y axis rotation (rad)
+    cmd.axes[0] = generatePI(err_0, g_i_x, 1.0/30, 10, 6); // Z axis rotation (rad)
+    cmd.axes[1] = generatePI(err_1, g_i_y, 1.0/30, 10, 6); // Y axis rotation (rad)
 }
 
 bool detect(Mat frame,Rect2d& roi)
@@ -49,15 +85,12 @@ bool detect(Mat frame,Rect2d& roi)
     inRange(tmp,l_range,h_range,tmp);
     dilate(tmp, tmp, getStructuringElement(MORPH_ELLIPSE, Size(3, 3)), Point2i(2));
     findContours(tmp,counters,RETR_EXTERNAL,CHAIN_APPROX_NONE);
-    //imshow("tmp",tmp);
-    //waitKey(1);
     if(counters.size()==0) {return false;}
     double t=0;
     int k=0;
     for (int i = 0; i < counters.size(); i++)
     {
       roi_t=boundingRect(counters[i]);
-      //cout<<roi.x<<" "<<roi.y<<endl;
       if(t<roi_t.area())
       {
         t=roi_t.area();
@@ -65,7 +98,7 @@ bool detect(Mat frame,Rect2d& roi)
       }
     }
     roi_t=boundingRect(counters[k]);
-    if(roi_t.area()<=100)
+    if(roi_t.area()<=1500)
     {
       return false;
     }
@@ -86,25 +119,13 @@ void imgCb(const sensor_msgs::ImageConstPtr& img_msg)
     return;
   }
   Mat img = cv_ptr->image;
-  // DO IMAGE PROCCESSING
-  // Rect rect((img.cols - img.rows / 3.0) / 2.0, img.rows / 3.0, img.rows / 3.0, img.rows / 3.0);
-  // rectangle(img, rect, Scalar(0, 0, 255), 10);
-  // Rect2d roi;
-  // if (detect(img, roi))
-  // {
-  //   rectangle(img, roi, Scalar(0, 0, 255), 5);
-  // }
-  // float peak_value;
-  // Rect roi = tracker.update(img, peak_value);
-  // FINISH
+  
   switch(status)
   {
     case DETECT:
     {
-      //printf("detecting\n");
       if(detect(img,roi))
       {
-        //printf("detected\n");
         status = TRACK;
         tracker.init(roi,img);
         rectangle(img, roi, Scalar(0, 0, 255), 5);
@@ -120,11 +141,9 @@ void imgCb(const sensor_msgs::ImageConstPtr& img_msg)
       
     case TRACK:
     {
-      //printf("tracking\n");
       roi = tracker.update(img,peak_value);
       if(peak_value>0.4 && count<10)
       {
-        //printf("tracked\n");
         rectangle(img, roi, Scalar(0, 0, 255), 5);
         cmdGenerate(roi,cmd,K);
         count++;
@@ -140,6 +159,7 @@ void imgCb(const sensor_msgs::ImageConstPtr& img_msg)
   }  
   // VISUAL SERVO FINISH
   cmd_pub.publish(cmd); 
+  viewer(img, status, roi, peak_value);
   img_pub.publish(cv_ptr->toImageMsg());
 }
 
