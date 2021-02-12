@@ -1,5 +1,5 @@
-# ×ªÌ¨Ä£ÄâÆ÷
-## ±àÒë
+# è½¬å°æ¨¡æ‹Ÿå™¨
+## ç¼–è¯‘
 ```Bash
 $ sudo apt-get install ros-kinetic-joint-state-publisher-gui
 $ cd ~/catkin_ws/src
@@ -8,18 +8,18 @@ $ git clone https://gitee.com/harbin-institute-of-technology-csc/drone_simulator
 $ cd ~/catkin_ws
 $ catkin_make
 ```
-## ÔËĞĞ½á¹û
-²é¿´Ä£ĞÍ
+## è¿è¡Œç»“æœ
+æŸ¥çœ‹æ¨¡å‹
 ```Bash
 $ roslaunch rotor_description display.launch
 ```
-![image](https://gitee.com/harbin-institute-of-technology-csc/rotor_simulator/raw/master/rotor2_rviz.png)
-¼¤¹âÎäÆ÷ÊÖ±ú¿ØÖÆ
+![image](rotor2_rviz.png)
+æ¿€å…‰æ­¦å™¨æ‰‹æŸ„æ§åˆ¶
 ```Bash
 $ roslaunch rotor_simulator laser_weapon_maunal.launch
 ```
-![image](https://gitee.com/harbin-institute-of-technology-csc/rotor_simulator/raw/master/laser_weapon_manual.png)
-¼¤¹âÎäÆ÷ÊÓ¾õËÅ·ş
+![image](laser_weapon_manual.png)
+æ¿€å…‰æ­¦å™¨è§†è§‰ä¼ºæœ
 ```Bash
 $ roslaunch rotor_simulator laser_weapon_auto.launch
 ```
